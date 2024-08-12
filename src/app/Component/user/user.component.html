@@ -1,26 +1,27 @@
 <h1>QUẢN LÝ TÀI KHOẢN</h1>
 <div class="header-content">
   <div class="left">
-    <input class="search" type="text" pInputText placeholder="Nhập tên" />
+    <input class="search" type="text" pInputText placeholder="Nhập tên" [(ngModel)]="textSearch" />
     <input
       class="search"
       type="text"
       pInputText
       placeholder="Nhập số điện thoại"
+      [(ngModel)]="phoneSearch"
     />
-    <input class="search" type="text" pInputText placeholder="Nhập địa chỉ" />
+    <input class="search" type="text" pInputText placeholder="Nhập địa chỉ" [(ngModel)]="addressSearch"/>
     <div class="role">
       Chức vụ:
-      <p-dropdown [options]="role" optionLabel="name" placeholder="Admin" />
+      <p-dropdown [options]="role" optionLabel="name" placeholder="Chọn chức vụ" [(ngModel)]="selectedRole" (onChange)="onRoleChange($event)" />
     </div>
     <div class="gender">
       Giới tính:
       <div class="flex align-items-center">
-        <input type="checkbox" id="male" value="male" />
+        <input type="checkbox" id="male" value="male" (change)="onGenderChange($event)"/>
         <label for="male" class="ml-2">Nam</label>
       </div>
       <div class="flex align-items-center">
-        <input type="checkbox" id="female" value="female" />
+        <input type="checkbox" id="female" value="female" (change)="onGenderChange($event)"/>
         <label for="female" class="ml-2">Nữ</label>
       </div>
     </div>
@@ -47,10 +48,10 @@
   <ng-template pTemplate="body" let-user let-i="rowIndex">
     <tr>
       <td>{{ i + 1 }}</td>
-      <td>{{ user.name }}</td>
+      <td>{{ user.fullName }}</td>
       <td>{{ user.age }}</td>
-      <td>{{ user.gender }}</td>
-      <td>{{ user.phone }}</td>
+      <td>{{ user.gender ? 'Nam' : 'Nữ'}}</td>
+      <td>{{ user.phoneNumber }}</td>
       <td>{{ user.address }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.role }}</td>
@@ -72,9 +73,4 @@
   </ng-template>
 </p-table>
 
-<p-paginator
-  class="paginator"
-  [rows]="10"
-  [totalRecords]="120"
-  [rowsPerPageOptions]="[10, 20, 30]"
-/>
+<p-paginator class="paginator" [rows]="limit" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]" (onPageChange)="onPageChange($event)"></p-paginator>
