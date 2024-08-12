@@ -1,0 +1,75 @@
+h1 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.p-table {
+  margin-top: 20px;
+}
+
+.p-button-rounded {
+  border-radius: 50%;
+}
+
+.header-content {
+  width: 100%;
+  height: 84px;
+  border: black 2px solid;
+  margin-bottom: 20px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-content .right1 {
+    height: 100%;
+    width: 200px;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
+.paginator{
+  margin-left: 1200px;
+}
+
+.left1{
+  height: 100%;
+  width: 715px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.search{
+  height: 50px;
+  width: 333px;
+}
+
+.date{
+  width: 333px;
+}
+
+.gender{
+  width: 250px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* .btn-add> button{
+  width: 100px;
+} */
+
+.role{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.filter{
+  width: 0px;
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+.add{
+  align-self: end;
+}
