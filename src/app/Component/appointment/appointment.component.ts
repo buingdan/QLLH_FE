@@ -48,4 +48,19 @@ export class AppointmentComponent {
       notes: "Đã cải thiện tình trạng"
     }
   ]
+  visible: boolean = false;
+  visible1: boolean = false;
+  date1: Date | undefined;
+  date2: Date | undefined;
+
+  showDialogAdd() {
+    console.log("showDialog");
+
+    this.visible = true;
+  }
+
+  showDialogEdit(user: any){
+    console.log(user);
+    this.visible1 = true;
+  }
 }

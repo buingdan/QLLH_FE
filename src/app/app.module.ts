@@ -15,6 +15,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CalendarModule } from 'primeng/calendar';
 import { provideHttpClient } from '@angular/common/http';
+import { DialogModule } from 'primeng/dialog';
+import { FormsModule} from '@angular/forms';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,8 +38,15 @@ import { provideHttpClient } from '@angular/common/http';
     DropdownModule,
     RadioButtonModule,
     CalendarModule,
+    DialogModule,
+    FormsModule,
+    DialogModule,
+    ButtonModule,
+    InputTextModule,
+    BrowserAnimationsModule,
+    NoopAnimationsModule
   ],
-  providers: [provideHttpClient(),],
+  providers: [provideHttpClient(), BrowserAnimationsModule ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

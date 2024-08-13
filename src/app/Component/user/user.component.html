@@ -1,7 +1,13 @@
 <h1>QUẢN LÝ TÀI KHOẢN</h1>
 <div class="header-content">
   <div class="left">
-    <input class="search" type="text" pInputText placeholder="Nhập tên" [(ngModel)]="textSearch" />
+    <input
+      class="search"
+      type="text"
+      pInputText
+      placeholder="Nhập tên"
+      [(ngModel)]="textSearch"
+    />
     <input
       class="search"
       type="text"
@@ -9,26 +15,51 @@
       placeholder="Nhập số điện thoại"
       [(ngModel)]="phoneSearch"
     />
-    <input class="search" type="text" pInputText placeholder="Nhập địa chỉ" [(ngModel)]="addressSearch"/>
+    <input
+      class="search"
+      type="text"
+      pInputText
+      placeholder="Nhập địa chỉ"
+      [(ngModel)]="addressSearch"
+    />
     <div class="role">
       Chức vụ:
-      <p-dropdown [options]="role" optionLabel="name" placeholder="Chọn chức vụ" [(ngModel)]="selectedRole" (onChange)="onRoleChange($event)" />
+      <p-dropdown
+        [options]="role"
+        [style]="{ margin: '5px' }"
+        optionLabel="name"
+        placeholder="Chọn chức vụ"
+        [(ngModel)]="selectedRole"
+        (onChange)="onRoleChange($event)"
+      />
     </div>
     <div class="gender">
       Giới tính:
       <div class="flex align-items-center">
-        <input type="checkbox" id="male" value="male" (change)="onGenderChange($event)"/>
+        <input
+          type="checkbox"
+          id="male"
+          value="male"
+          (change)="onGenderChange($event)"
+        />
         <label for="male" class="ml-2">Nam</label>
       </div>
       <div class="flex align-items-center">
-        <input type="checkbox" id="female" value="female" (change)="onGenderChange($event)"/>
+        <input
+          type="checkbox"
+          id="female"
+          value="female"
+          (change)="onGenderChange($event)"
+        />
         <label for="female" class="ml-2">Nữ</label>
       </div>
     </div>
-    <div class="filter"><p-button label="Lọc" /></div>
+    <div class="filter">
+      <p-button label="Lọc" [style]="{ marginTop: '13px' }" />
+    </div>
   </div>
   <div class="right">
-    <p-button label="Thêm" />
+    <p-button (onClick)="showDialogAdd()" label="Thêm" />
   </div>
 </div>
 <p-table [value]="users" responsiveLayout="scroll">
@@ -50,27 +81,244 @@
       <td>{{ i + 1 }}</td>
       <td>{{ user.fullName }}</td>
       <td>{{ user.age }}</td>
-      <td>{{ user.gender ? 'Nam' : 'Nữ'}}</td>
+      <td>{{ user.gender ? "Nam" : "Nữ" }}</td>
       <td>{{ user.phoneNumber }}</td>
       <td>{{ user.address }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.role }}</td>
       <td>
-        <button
+        <p-button
           pButton
           type="button"
           icon="pi pi-pencil"
           class="p-button-rounded p-button-success p-mr-2"
-        ></button>
-        <button
+          (onClick)="showDialogEdit(user)"
+        ></p-button>
+        <p-button
           pButton
           type="button"
           icon="pi pi-trash"
           class="p-button-rounded p-button-danger"
-        ></button>
+          [style]="{
+            backgroundColor: 'red',
+            display: 'flex',
+            justifyContent: 'center'
+          }"
+          (onClick)="onDeleteUser(user)"
+        ></p-button>
       </td>
     </tr>
   </ng-template>
 </p-table>
 
-<p-paginator class="paginator" [rows]="limit" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]" (onPageChange)="onPageChange($event)"></p-paginator>
+<p-paginator
+  class="paginator"
+  [rows]="limit"
+  [totalRecords]="totalRecords"
+  [rowsPerPageOptions]="[2, 3, 4]"
+  (onPageChange)="onPageChange($event)"
+></p-paginator>
+
+<div class="card flex justify-content-center">
+  <p-dialog
+    header="Thêm tài khoản"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '450px' }"
+  >
+    <div class="flex align-items-center gap-3 mb-3">
+      <label for="fullName" class="font-semibold w-6rem">Họ và tên:</label>
+      <input
+        pInputText
+        id="fullName"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="user.fullName"
+        [style]="{ marginLeft: '53px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="age" class="font-semibold w-6rem">Tuổi:</label>
+      <input
+        pInputText
+        id="age"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="user.age"
+        [style]="{ marginLeft: '90px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="gender" class="font-semibold w-6rem">Giới tính:</label>
+      <input
+        pInputText
+        id="age"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="user.gender"
+        [style]="{ marginLeft: '60px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="phoneNumber" class="font-semibold w-6rem"
+        >Số điện thoại:</label
+      >
+      <input
+        pInputText
+        id="phoneNumber"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="user.phoneNumber"
+        [style]="{ marginLeft: '27px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="address" class="font-semibold w-6rem">Địa chỉ:</label>
+      <input
+        pInputText
+        id="address"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="user.address"
+        [style]="{ marginLeft: '72px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="email" class="font-semibold w-6rem">Email:</label>
+      <input
+        pInputText
+        id="email"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="user.email"
+        [style]="{ marginLeft: '82px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="role" class="font-semibold w-6rem">Chức vụ:</label>
+      <input
+        pInputText
+        id="role"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="user.role"
+        [style]="{ marginLeft: '63px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        label="Hủy"
+        severity="secondary"
+        (onClick)="visible = false"
+        [style]="{ marginLeft: '150px' }"
+      />
+      <p-button
+        label="Xác nhận"
+        (onClick)="onSubmit()"
+        [style]="{ marginLeft: '20px' }"
+      />
+    </div>
+  </p-dialog>
+</div>
+
+<div class="card flex justify-content-center">
+  <p-dialog
+    header="Sửa tài khoản"
+    [modal]="true"
+    [(visible)]="visible1"
+    [style]="{ width: '450px' }"
+  >
+    <div class="flex align-items-center gap-3 mb-3">
+      <label for="fullName" class="font-semibold w-6rem">Họ và tên:</label>
+      <input
+        pInputText
+        id="fullName"
+        class="flex-auto"
+        autocomplete="off"
+        [style]="{ marginLeft: '53px', marginBottom: '15px' }"
+        [(ngModel)]="user.fullName"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="age" class="font-semibold w-6rem">Tuổi:</label>
+      <input
+        pInputText
+        id="age"
+        class="flex-auto"
+        autocomplete="off"
+        [style]="{ marginLeft: '90px', marginBottom: '15px' }"
+        [(ngModel)]="user.age"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="gender" class="font-semibold w-6rem">Giới tính:</label>
+      <input
+        pInputText
+        id="gender"
+        class="flex-auto"
+        autocomplete="off"
+        [style]="{ marginLeft: '60px', marginBottom: '15px' }"
+        [(ngModel)]="user.gender"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="phoneNumber" class="font-semibold w-6rem"
+        >Số điện thoại:</label
+      >
+      <input
+        pInputText
+        id="phoneNumber"
+        class="flex-auto"
+        autocomplete="off"
+        [style]="{ marginLeft: '27px', marginBottom: '15px' }"
+        [(ngModel)]="user.phoneNumber"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="address" class="font-semibold w-6rem">Địa chỉ:</label>
+      <input
+        pInputText
+        id="address"
+        class="flex-auto"
+        autocomplete="off"
+        [style]="{ marginLeft: '72px', marginBottom: '15px' }"
+        [(ngModel)]="user.address"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="email" class="font-semibold w-6rem">Email:</label>
+      <input
+        pInputText
+        id="email"
+        class="flex-auto"
+        autocomplete="off"
+        [style]="{ marginLeft: '82px', marginBottom: '15px' }"
+        [(ngModel)]="user.email"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="role" class="font-semibold w-6rem">Chức vụ:</label>
+      <input
+        pInputText
+        id="role"
+        class="flex-auto"
+        autocomplete="off"
+        [style]="{ marginLeft: '63px', marginBottom: '15px' }"
+        [(ngModel)]="user.role"
+      />
+    </div>
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        label="Hủy"
+        severity="secondary"
+        (onClick)="onCancelEdit()"
+        [style]="{ marginLeft: '150px' }"
+      />
+      <p-button
+        label="Xác nhận"
+        (onClick)="onSubmitEdit(user.id, user)"
+        [style]="{ marginLeft: '20px' }"
+      />
+    </div>
+  </p-dialog>
+</div>
