@@ -20,10 +20,10 @@
   </div>
   <div class="filter"><p-button label="Lọc" /></div>
   <div class="add">
-    <p-button [ngStyle]="{ width: '100px' }" label="Thêm" />
+    <p-button [ngStyle]="{ width: '100px' }" (onClick)="showDialogAdd()" label="Thêm" />
   </div>
 </div>
-<p-table [value]="appointment" responsiveLayout="scroll">
+<p-table [value]="histories" responsiveLayout="scroll">
   <ng-template pTemplate="header">
     <tr>
       <th>STT</th>
@@ -34,26 +34,33 @@
       <th>Hành động</th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-appointment let-i="rowIndex">
+  <ng-template pTemplate="body" let-historyy let-i="rowIndex">
     <tr>
-      <td>{{ i + 1 }}</td>
-      <td>{{ appointment.social_insurance_number }}</td>
-      <td>{{ appointment.diagnosis }}</td>
-      <td>{{ appointment.admission_date }}</td>
-      <td>{{ appointment.discharge_date }}</td>
+      <td>{{ (currentPage -1)* limit +i + 1 }}</td>
+      <td>{{ historyy.insuranceCode }}</td>
+      <td>{{ historyy.diagnostic }}</td>
+      <td>{{ historyy.startDate }}</td>
+      <td>{{ historyy.endDate }}</td>
       <td>
-        <button
+        <p-button
           pButton
           type="button"
           icon="pi pi-pencil"
           class="p-button-rounded p-button-success p-mr-2"
-        ></button>
-        <button
+          (onClick)="showDialogEdit(historyy)"
+        ></p-button>
+        <p-button
           pButton
           type="button"
           icon="pi pi-trash"
           class="p-button-rounded p-button-danger"
-        ></button>
+          [style]="{
+            backgroundColor: 'red',
+            display: 'flex',
+            justifyContent: 'center'
+          }"
+          (onClick)="onDeleteHistory(historyy)"
+        ></p-button>
       </td>
     </tr>
   </ng-template>
@@ -61,7 +68,149 @@
 
 <p-paginator
   class="paginator"
-  [rows]="10"
-  [totalRecords]="120"
-  [rowsPerPageOptions]="[10, 20, 30]"
-/>
+  [rows]="limit"
+  [totalRecords]="totalRecords"
+  [rowsPerPageOptions]="[2, 3, 4]"
+  (onPageChange)="onPageChange($event)"
+></p-paginator>
+
+<div class="card flex justify-content-center">
+  <p-dialog
+    header="Thêm lịch sử khám"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '450px' }"
+  >
+    <div class="flex align-items-center gap-3 mb-3">
+      <label for="insuranceCode" class="font-semibold w-6rem">Mã số BHYT:</label>
+      <input
+        pInputText
+        id="insuranceCode"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="history.insuranceCode"
+        [style]="{ marginLeft: '53px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="diagnostic" class="font-semibold w-6rem">Chuẩn đoán:</label>
+      <input
+        pInputText
+        id="diagnostic"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="history.diagnostic"
+        [style]="{ marginLeft: '53px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="startDate" class="font-semibold w-6rem">Ngày vào viện:</label>
+      <input
+        pInputText
+        id="startDate"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="history.startDate"
+        [style]="{ marginLeft: '38px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="endDate" class="font-semibold w-6rem"
+        >Ngày ra viện:</label
+      >
+      <input
+        pInputText
+        id="endDate"
+        class="flex-auto"
+        autocomplete="off"
+        [(ngModel)]="history.endDate"
+        [style]="{ marginLeft: '49px', marginBottom: '15px' }"
+      />
+    </div>
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        label="Hủy"
+        severity="secondary"
+        (onClick)="visible = false"
+        [style]="{ marginLeft: '150px' }"
+      />
+      <p-button
+        label="Xác nhận"
+        (onClick)="onSubmit()"
+        [style]="{ marginLeft: '23px' }"
+      />
+    </div>
+  </p-dialog>
+</div>
+
+<div class="card flex justify-content-center">
+  <p-dialog
+    header="Sửa lịch sử khám"
+    [modal]="true"
+    [(visible)]="visible1"
+    [style]="{ width: '450px' }"
+  >
+    <div class="flex align-items-center gap-3 mb-3">
+      <label for="fullName" class="font-semibold w-6rem">Họ và tên:</label>
+      <div class="flex align-items-center gap-3 mb-3">
+        <label for="insuranceCode" class="font-semibold w-6rem">Mã số BHYT:</label>
+        <input
+          pInputText
+          id="insuranceCode"
+          class="flex-auto"
+          autocomplete="off"
+          [(ngModel)]="history.insuranceCode"
+          [style]="{ marginLeft: '53px', marginBottom: '15px' }"
+        />
+      </div>
+      <div class="flex align-items-center gap-3 mb-5">
+        <label for="diagnostic" class="font-semibold w-6rem">Chuẩn đoán:</label>
+        <input
+          pInputText
+          id="diagnostic"
+          class="flex-auto"
+          autocomplete="off"
+          [(ngModel)]="history.diagnostic"
+          [style]="{ marginLeft: '53px', marginBottom: '15px' }"
+        />
+      </div>
+      <div class="flex align-items-center gap-3 mb-5">
+        <label for="startDate" class="font-semibold w-6rem">Ngày vào viện:</label>
+        <input
+          pInputText
+          id="startDate"
+          class="flex-auto"
+          autocomplete="off"
+          [(ngModel)]="history.startDate"
+          [style]="{ marginLeft: '38px', marginBottom: '15px' }"
+        />
+      </div>
+      <div class="flex align-items-center gap-3 mb-5">
+        <label for="endDate" class="font-semibold w-6rem"
+          >Ngày ra viện:</label
+        >
+        <input
+          pInputText
+          id="endDate"
+          class="flex-auto"
+          autocomplete="off"
+          [(ngModel)]="history.endDate"
+          [style]="{ marginLeft: '49px', marginBottom: '15px' }"
+        />
+      </div>
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        label="Hủy"
+        severity="secondary"
+        (onClick)="onCancelEdit()"
+        [style]="{ marginLeft: '150px' }"
+      />
+      <p-button
+        label="Xác nhận"
+        (onClick)="onSubmitEdit(history.id, history)"
+        [style]="{ marginLeft: '23px' }"
+      />
+    </div>
+    </div>
+  </p-dialog>
+</div>

@@ -12,7 +12,7 @@ export class UserComponent {
   users: any[] = [];
   totalRecords: number = 0;
   currentPage: number = 1;
-  limit: number = 9;
+  limit: number = 5;
   visible: boolean = false;
   visible1: boolean = false;
   user = {

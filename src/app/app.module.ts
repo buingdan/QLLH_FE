@@ -29,7 +29,6 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     ButtonModule,
     TableModule,
     AppRoutingModule,
