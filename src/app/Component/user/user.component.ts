@@ -10,6 +10,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class UserComponent {
   users: any[] = [];
+  ingredient!: string;
   totalRecords: number = 0;
   currentPage: number = 1;
   limit: number = 5;
@@ -25,44 +26,91 @@ export class UserComponent {
     email: '',
     role: '',
   };
-
+  userSearch = {
+    nameSearch: '',
+    phoneNumber: '',
+    addressSearch: '',
+    roleSearch: '',
+    genderSearch: [true, false],
+  };
+  roles = [
+    { name: 'Admin', code: 'Admin' },
+    { name: 'Bệnh nhân', code: 'Bệnh nhân' },
+    { name: 'Bác sĩ', code: 'Bác sĩ' },
+  ];
   formGroup: FormGroup | undefined;
 
   onDeleteUser(user: any) {
     console.log(user);
     this.userService.deleteUser(user.id);
-    this.loadUsers();
+    this.loadUsersNew();
   }
   textSearch: string = '';
   phoneSearch: string = '';
   addressSearch: string = '';
   selectedRole: string = '';
-  selectedGender: string[] = [];
 
   role: SelectItem[] = [
     { label: 'Admin', value: 'admin' },
     { label: 'Bác sĩ', value: 'bác sĩ' },
     { label: 'Bệnh nhân', value: 'bệnh nhân' },
   ];
+  selectedGender: boolean | null = null; // Quản lý trạng thái của radio button
 
+  onGenderChange(selectedGender: boolean) {
+    this.selectedGender = selectedGender;
+    this.userSearch.genderSearch = [selectedGender];
+  }
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.loadUsersNew();
     this.formGroup = new FormGroup({
       selectedGender: new FormControl<any | null>(null),
     });
   }
+  onFilterNew() {
+    this.loadUsersNew();
+    this.userSearch = {
+      nameSearch: '',
+      phoneNumber: '',
+      addressSearch: '',
+      roleSearch: '',
+      genderSearch: [true, false],
+    };
+  }
 
-  loadUsers() {
-    // const combinedSearch = `${this.textSearch} ${this.phoneSearch} ${this.addressSearch}`;
+  // loadUsers() {
+  //   // const combinedSearch = `${this.textSearch} ${this.phoneSearch} ${this.addressSearch}`;
+  //   const sortData = 'fullName';
+  //   const sortType = 'asc';
+
+  //   this.userService
+  //     // .getUsers(combinedSearch.trim(), sortData, sortType, this.currentPage, this.limit)
+  //     .getUsers(
+  //       this.textSearch,
+  //       sortData,
+  //       sortType,
+  //       this.currentPage,
+  //       this.limit
+  //     )
+  //     .subscribe((response) => {
+  //       this.users = response.list;
+  //       this.totalRecords = response.totalRecord;
+  //     });
+  // }
+
+  loadUsersNew() {
     const sortData = 'fullName';
     const sortType = 'asc';
 
     this.userService
-      // .getUsers(combinedSearch.trim(), sortData, sortType, this.currentPage, this.limit)
-      .getUsers(
-        this.textSearch,
+      .getUsersNew(
+        this.userSearch.nameSearch,
+        this.userSearch.phoneNumber,
+        this.userSearch.addressSearch,
+        this.userSearch.roleSearch,
+        this.userSearch.genderSearch,
         sortData,
         sortType,
         this.currentPage,
@@ -76,31 +124,20 @@ export class UserComponent {
 
   onFilter() {
     this.currentPage = 1;
-    this.loadUsers();
+    this.loadUsersNew();
   }
 
   onPageChange(event: any) {
     this.currentPage = event.page + 1;
     this.limit = event.rows;
-    this.loadUsers();
+    this.loadUsersNew();
   }
 
   onRoleChange(event: any) {
-    this.selectedRole = event.value;
-    this.loadUsers();
+    console.log(event);
+    this.userSearch.roleSearch = event.value.code;
   }
 
-  onGenderChange(event: any) {
-    const selectedGenders = [];
-    if (event.target.value === 'male' && event.target.checked) {
-      selectedGenders.push('Nam');
-    }
-    if (event.target.value === 'female' && event.target.checked) {
-      selectedGenders.push('Nữ');
-    }
-    this.selectedGender = selectedGenders;
-    this.loadUsers();
-  }
   showDialogEdit(user: any) {
     this.visible1 = true;
     console.log(user);
@@ -135,7 +172,7 @@ export class UserComponent {
           role: '',
         };
         this.visible = false;
-        this.loadUsers();
+        this.loadUsersNew();
       },
       (error) => {
         console.error('Error adding user', error);
@@ -150,7 +187,7 @@ export class UserComponent {
           role: '',
         };
         this.visible = false;
-        this.loadUsers();
+        this.loadUsersNew();
       }
     );
   }
@@ -182,7 +219,7 @@ export class UserComponent {
           role: '',
         };
         this.visible1 = false;
-        this.loadUsers();
+        this.loadUsersNew();
       },
       (error) => {
         console.error('Sửa tài khoản thất bại', error);
@@ -197,7 +234,7 @@ export class UserComponent {
           role: '',
         };
         this.visible1 = false;
-        this.loadUsers();
+        this.loadUsersNew();
       }
     );
   }

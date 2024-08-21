@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:8080/api/v1/users';
+  private apiUrl = 'http://localhost:8085/api/v1/users';
 
   constructor(private http: HttpClient) {}
 
@@ -25,6 +25,31 @@ export class UserService {
       .set('limit', limit.toString());
 
     return this.http.get(this.apiUrl+ "/page", { params });
+  }
+
+  getUsersNew(
+    nameSearch: string,
+    phoneNumber: string,
+    addressSearch: string,
+    roleSearch: string,
+    genderSearch: boolean[],
+    sortData: string,
+    sortType: string,
+    currentPage: number,
+    limit: number
+  ): Observable<any> {
+    let params = new HttpParams()
+      .set('nameSearch', nameSearch)
+      .set('phoneSearch', phoneNumber)
+      .set('addressSearch', addressSearch)
+      .set('genderSearch', genderSearch.join(','))
+      .set('roleSearch', roleSearch)
+      .set('sortData', sortData)
+      .set('sortType', sortType)
+      .set('currentPage', currentPage.toString())
+      .set('limit', limit.toString());
+
+    return this.http.get(this.apiUrl+ "/page_new", { params });
   }
   deleteUser(userId: number) {
     this.http.delete(this.apiUrl + "/delete/" + `${userId}`).subscribe({

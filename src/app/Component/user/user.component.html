@@ -6,56 +6,63 @@
       type="text"
       pInputText
       placeholder="Nhập tên"
-      [(ngModel)]="textSearch"
+      [(ngModel)]="userSearch.nameSearch"
     />
     <input
       class="search"
       type="text"
       pInputText
       placeholder="Nhập số điện thoại"
-      [(ngModel)]="phoneSearch"
+      [(ngModel)]="userSearch.phoneNumber"
     />
     <input
       class="search"
       type="text"
       pInputText
       placeholder="Nhập địa chỉ"
-      [(ngModel)]="addressSearch"
+      [(ngModel)]="userSearch.addressSearch"
     />
     <div class="role">
       Chức vụ:
       <p-dropdown
-        [options]="role"
+        [options]="roles"
         [style]="{ margin: '5px' }"
         optionLabel="name"
         placeholder="Chọn chức vụ"
-        [(ngModel)]="selectedRole"
+        [(ngModel)]="userSearch.roleSearch"
         (onChange)="onRoleChange($event)"
       />
     </div>
     <div class="gender">
       Giới tính:
       <div class="flex align-items-center">
-        <input
-          type="checkbox"
-          id="male"
-          value="male"
-          (change)="onGenderChange($event)"
+        <p-radioButton
+          name="gender"
+          value="true"
+          [(ngModel)]="selectedGender"
+          (onClick)="onGenderChange(true)"
+          inputId="true"
         />
-        <label for="male" class="ml-2">Nam</label>
+        <label for="true" class="ml-2"> Nam </label>
       </div>
+
       <div class="flex align-items-center">
-        <input
-          type="checkbox"
-          id="female"
-          value="female"
-          (change)="onGenderChange($event)"
+        <p-radioButton
+          name="gender"
+          value="false"
+          [(ngModel)]="selectedGender"
+          (onClick)="onGenderChange(false)"
+          inputId="false"
         />
-        <label for="female" class="ml-2">Nữ</label>
+        <label for="false" class="ml-2"> Nữ </label>
       </div>
     </div>
     <div class="filter">
-      <p-button label="Lọc" [style]="{ marginTop: '13px' }" />
+      <p-button
+        label="Lọc"
+        (onClick)="onFilterNew()"
+        [style]="{ marginTop: '13px' }"
+      />
     </div>
   </div>
   <div class="right">
@@ -78,7 +85,7 @@
   </ng-template>
   <ng-template pTemplate="body" let-user let-i="rowIndex">
     <tr>
-      <td>{{ (currentPage - 1)* limit + i + 1 }}</td>
+      <td>{{ (currentPage - 1) * limit + i + 1 }}</td>
       <td>{{ user.fullName }}</td>
       <td>{{ user.age }}</td>
       <td>{{ user.gender ? "Nam" : "Nữ" }}</td>
